@@ -24,7 +24,7 @@ def predict():
 
     output = round(prediction[0], 2)
 
-    return render_template('ds_project1.html', prediction_text='CO2 Emission of the vehicle is :{}'.format(output))
+    return render_template('DS/ds_project1.html', prediction_text='CO2 Emission of the vehicle is :{}'.format(output))
 
 @app.route('/dashboard')
 def dashboard():
