@@ -1,11 +1,25 @@
 #import libraries
 import numpy as np
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template,url_for
 import pickle
+
+# DS libs
+import os
+import joblib
 
 #Initialize the flask App
 app = Flask(__name__)
 model = pickle.load(open('model.pkl', 'rb'))
+
+# initialize Models pkg
+# DataScience ML Packages
+news_vectorizer = open(os.path.join("static/models/final_news_cv_vectorizer.pkl"),"rb")
+news_cv = joblib.load(news_vectorizer)
+
+def get_keys(val,my_dict):
+    for key,value in my_dict.items():
+        if val == value:
+            return key 
 
 #default page of our web-app
 @app.route('/')
@@ -29,6 +43,7 @@ def predict():
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+    
 #######################
 # DATA SCIENCE PROJECTS
 #######################
@@ -43,6 +58,30 @@ def ds_project1():
 @app.route('/ds_project2')
 def ds_project2():
     return render_template('DS/ds_project2.html')
+
+@app.route('/predict2',methods=['GET', 'POST'])
+def predict2():
+     if request.method == 'POST':
+        rawtext = request.form['rawtext']
+        modelchoice = request.form['modelchoice']
+        vectorized_text = news_cv.transform([rawtext]).toarray()
+        
+        if modelchoice == 'nb':
+            news_nb_model = open(os.path.join("static/models/newsclassifier_NB_model.pkl"),'rb')
+            news_clf = joblib.load(news_nb_model)
+        elif modelchoice == 'logit':
+            news_nb_model = open(os.path.join("static/models/newsclassifier_Logit_model.pkl"),'rb')
+            news_clf = joblib.load(news_nb_model)
+        elif modelchoice == 'rf':
+            news_nb_model = open(os.path.join("static/models/newsclassifier_RFOREST_model.pkl"),'rb')
+            news_clf = joblib.load(news_nb_model)
+
+        #Prediction
+        prediction_labels = {"business":0,"tech":1,"sport":2,"health":3,"politics":4,"entertainment":5}
+        prediction = news_clf.predict(vectorized_text)
+        final_result = get_keys(prediction,prediction_labels)
+
+        return render_template('DS/ds_project2.html',rawtext = rawtext.upper(),final_result=final_result)
 
 @app.route('/ds_project3')
 def ds_project3():

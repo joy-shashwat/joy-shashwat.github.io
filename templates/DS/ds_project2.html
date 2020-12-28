@@ -1,22 +1,51 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+<body>
+<body>
 <div>
-  <h1>Predict CO2 Emission of Vehicles</h1>
-  <h3> Enter the following values to predict the CO2 emission from the vehicle</h3>
+  <h1>NewsClassifier</h1>
+  <button>
+  <a href="{{ url_for('ds_project2')}}" style="color: #fff">Refresh &raquo; </a></button>
+  </BR> </BR>
+</div>
 
-  <!-- Main Input For Receiving Query to our ML -->
-  <form action="{{ url_for('predict')}}"method="post">
-    <input type="text" name="enginesize" placeholder="Engine Size" required="required" />
-    <input type="text" name="cylinders" placeholder="Cylinders" required="required" />
-    <input type="text" name="fuel" placeholder="Fuel" required="required" />
+<div class="container" >
+<form method="POST" action="/predict2">
+  <textarea rows="10" cols="10" type="text" name='rawtext'></textarea>
+    <select name="modelchoice">
+      <option selected>Select Model Type</option>
+      <option value="nb">Naive Bayes</option>
+      <option value="logit">Logistic Regression</option>
+      <option value="rf">Random Forest</option>
+      
+    </select>
+  <button type="reset" >Clear</button>
+  <button type="submit" >Predict</button>
+</form>
+</div>
+<br/>
+<br/>
+<div>
+<h4>Original Text </h4>
+      <p>{{ rawtext }}</p>
+    </div>
+  </div>
 
-    <button type="submit" class="btn">Predict</button>
-  </form>
 
-  <br>
-  <br>
-  {{ prediction_text }}
+
+  <div>
+      <h4>Prediction</h4>
+      <div><p>{{ final_result }}</p></div>
+    </div>
+  </div>
+</div>
+  <br/>
+
 
 </div>
+
+
+</body>
+</body>
 {% endblock %}
