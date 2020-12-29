@@ -26,20 +26,6 @@ def get_keys(val,my_dict):
 def home():
     return render_template('dashboard.html')
 
-#To use the predict button in our web-app
-@app.route('/predict',methods=['POST'])
-def predict():
-    '''
-    For rendering results on HTML GUI
-    '''
-    int_features = [float(x) for x in request.form.values()]
-    final_features = [np.array(int_features)]
-    prediction = model.predict(final_features)
-
-    output = round(prediction[0], 2)
-
-    return render_template('DS/ds_project1.html', prediction_text='CO2 Emission of the vehicle is :{}'.format(output))
-
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
@@ -55,12 +41,42 @@ def datascience():
 def ds_project1():
     return render_template('DS/ds_project1.html')
 
+#To use the predict button in our web-app
+@app.route('/ds_predict1',methods=['POST'])
+def ds_predict1():
+    '''
+    For rendering results on HTML GUI
+    '''
+    int_features = [float(x) for x in request.form.values()]
+    final_features = [np.array(int_features)]
+    prediction = model.predict(final_features)
+
+    output = round(prediction[0], 2)
+
+    return render_template('DS/ds_project1.html', prediction_text='CO2 Emission of the vehicle is :{}'.format(output))
+
 @app.route('/ds_project2')
 def ds_project2():
     return render_template('DS/ds_project2.html')
 
-@app.route('/predict2',methods=['GET', 'POST'])
-def predict2():
+@app.route('/ds_project3')
+def ds_project3():
+    return render_template('DS/ds_project3.html')
+
+######################################
+# NATURAL LANGUAGE PROCESSING PROJECTS
+######################################
+@app.route('/nlp')
+def nlp():
+    return render_template('NLP/nlp.html')
+
+@app.route('/nlp_project1')
+def nlp_project1():
+    return render_template('NLP/nlp_project1.html')
+
+
+@app.route('/nlp_predict1',methods=['GET', 'POST'])
+def nlp_predict1():
      if request.method == 'POST':
         rawtext = request.form['rawtext']
         modelchoice = request.form['modelchoice']
@@ -81,22 +97,8 @@ def predict2():
         prediction = news_clf.predict(vectorized_text)
         final_result = get_keys(prediction,prediction_labels)
 
-        return render_template('DS/ds_project2.html',rawtext = rawtext.upper(),final_result=final_result)
+        return render_template('NLP/nlp_project1.html',rawtext = rawtext.upper(),final_result=final_result)
 
-@app.route('/ds_project3')
-def ds_project3():
-    return render_template('DS/ds_project3.html')
-
-######################################
-# NATURAL LANGUAGE PROCESSING PROJECTS
-######################################
-@app.route('/nlp')
-def nlp():
-    return render_template('NLP/nlp.html')
-
-@app.route('/nlp_project1')
-def nlp_project1():
-    return render_template('NLP/nlp_project1.html')
 
 @app.route('/nlp_project2')
 def nlp_project2():

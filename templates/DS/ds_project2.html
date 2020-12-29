@@ -1,51 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<body>
-<body>
 <div>
-  <h1>NewsClassifier</h1>
-  <button>
-  <a href="{{ url_for('ds_project2')}}" style="color: #fff">Refresh &raquo; </a></button>
-  </BR> </BR>
-</div>
-
-<div class="container" >
-<form method="POST" action="/predict2">
-  <textarea rows="10" cols="10" type="text" name='rawtext'></textarea>
-    <select name="modelchoice">
-      <option selected>Select Model Type</option>
-      <option value="nb">Naive Bayes</option>
-      <option value="logit">Logistic Regression</option>
-      <option value="rf">Random Forest</option>
-      
-    </select>
-  <button type="reset" >Clear</button>
-  <button type="submit" >Predict</button>
-</form>
-</div>
-<br/>
-<br/>
-<div>
-<h4>Original Text </h4>
-      <p>{{ rawtext }}</p>
-    </div>
-  </div>
-
-
-
-  <div>
-      <h4>Prediction</h4>
-      <div><p>{{ final_result }}</p></div>
-    </div>
-  </div>
-</div>
-  <br/>
-
+  <h1>DS project-2</h1>
+ 
 
 </div>
-
-
-</body>
-</body>
 {% endblock %}
