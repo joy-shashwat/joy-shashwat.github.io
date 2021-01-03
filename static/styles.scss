@@ -149,6 +149,10 @@ html, body {
         outline: 0;
         font-weight: 300;
 
+        display: block;
+        width: 100%;
+        text-align: center;
+
         &:hover{
             background-color: $color-highlight-hover;
             cursor: pointer;
