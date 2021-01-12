@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div>
+  <h1>CV project-1</h1>
+ 
+ <h2>Video After Processing</h2>
+  <video width="560" height="340" controls> <source src="/static/demo.webm" type="video/webm">  </video>
+<BR>
+  <button onclick="goBack()">Go Back</button>
+	<script>
+	function goBack() {
+	  window.history.back();
+	}
+	</script>
+
+</div>
+{% endblock %}
