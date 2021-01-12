@@ -18,6 +18,8 @@ from werkzeug.utils import secure_filename
 import face_recognition
 import cv2
 import numpy as np
+import base64
+
 
 #Initialize the flask App
 app = Flask(__name__)
@@ -31,7 +33,7 @@ news_cv = joblib.load(news_vectorizer)
 
 #CV packages
 UPLOAD_FOLDER = 'upload/'
-ALLOWED_EXTENSIONS = set(['txt','mp4'])
+ALLOWED_EXTENSIONS = set(['txt','mp4', 'jpg', 'jpeg'])
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -505,9 +507,89 @@ def videotest(filename):
     return PATH
 
 
-@app.route('/cv_project2')
+@app.route('/cv_project2', methods=['GET', 'POST'])
 def cv_project2():
-    return render_template('CV/cv_project2.html')
+        return render_template('CV/cv_project2.html')
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    file = request.files['image']
+
+    # Save file
+    #filename = 'static/' + file.filename
+    #file.save(filename)
+
+    # Read image
+    buf = np.fromstring(file.read(), np.uint8)
+    image = cv2.imdecode(buf, cv2.IMREAD_UNCHANGED)
+    
+    # Detect faces
+    faces = detect_faces(image)
+
+    if len(faces) == 0:
+        faceDetected = False
+        num_faces = 0
+        to_send = ''
+    else:
+        faceDetected = True
+        num_faces = len(faces)
+        
+        # Draw a rectangle
+        for item in faces:
+            draw_rectangle(image, item['rect'])
+        
+        # Save
+        #cv2.imwrite(filename, image)
+        
+        # In memory
+        image_content = cv2.imencode('.jpg', image)[1].tostring()
+        encoded_image = base64.encodestring(image_content)
+        to_send = 'data:image/jpg;base64, ' + str(encoded_image, 'utf-8')
+
+    return render_template('CV/cv_project2.html', faceDetected=faceDetected, num_faces=num_faces, image_to_show=to_send, init=True)
+
+
+# ----------------------------------------------------------------------------------
+# Detect faces using OpenCV
+# ----------------------------------------------------------------------------------  
+def detect_faces(img):
+    '''Detect face in an image'''
+    
+    faces_list = []
+
+    # Convert the test image to gray scale (opencv face detector expects gray images)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Load OpenCV face detector (LBP is faster)
+    face_cascade = cv2.CascadeClassifier('static/models_cv2/opencv-files/lbpcascade_frontalface.xml')
+
+    # Detect multiscale images (some images may be closer to camera than others)
+    # result is a list of faces
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5);
+
+    # If not face detected, return empty list  
+    if  len(faces) == 0:
+        return faces_list
+    
+    for i in range(0, len(faces)):
+        (x, y, w, h) = faces[i]
+        face_dict = {}
+        face_dict['face'] = gray[y:y + w, x:x + h]
+        face_dict['rect'] = faces[i]
+        faces_list.append(face_dict)
+
+    # Return the face image area and the face rectangle
+    return faces_list
+# ----------------------------------------------------------------------------------
+# Draw rectangle on image
+# according to given (x, y) coordinates and given width and heigh
+# ----------------------------------------------------------------------------------
+def draw_rectangle(img, rect):
+    '''Draw a rectangle on the image'''
+    (x, y, w, h) = rect
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 255), 2)
+
+
 
 @app.route('/cv_project3')
 def cv_project3():

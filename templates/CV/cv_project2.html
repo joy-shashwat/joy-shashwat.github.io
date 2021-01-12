@@ -4,6 +4,33 @@
 <div>
   <h1>CV project-2</h1>
  
+    <h2>Face detection example</h2>
+    <p> Try uploading an image to see if a face is detected </p>
+    <p> Face detection using <a href="https://docs.opencv.org/2.4/modules/objdetect/doc/cascade_classification.html" target="blank"> Cascade Classification </a> | Powered by Python, Flask, OpenCV </p>
+    <p> Image size limit: 2 MB </p>
+    <br>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <label for="image">Select a file:</label>
+      <input type="file" id="image" name="image"><br>
+      <button type="submit">Upload</button>
+    </form>
+
+    {% if init %}
+        {% if faceDetected %}
+            <div class="alert alert-success" style="margin-top:18px;">
+                <strong>Yes!</strong> {{ num_faces }} face(s) detected!
+            </div>
+            {% if image_to_show %}
+                <div>
+                    <img src="{{ image_to_show }}">
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-danger" style="margin-top:18px;">
+                <strong>Nope!</strong> No face detected
+            </div>
+        {% endif %}
+    {% endif %}
 
 </div>
 {% endblock %}
