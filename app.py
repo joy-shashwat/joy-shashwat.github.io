@@ -443,7 +443,21 @@ def cv_project1():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             NEWPATH=videotest(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return render_template('CV/cv_project1.html')
+<<<<<<< HEAD
     return render_template('CV/cv_test.html')
+=======
+    return """
+    <!doctype html>
+    <h1>CV project-1</h1>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+      <p><input type=file name=file>
+         <input type=submit value=Upload>
+    </form>
+    <p>%s</p>
+    """ % "<br>".join(os.listdir(app.config['UPLOAD_FOLDER'],)) 
+>>>>>>> e748e3f94397d2fecb6a38a04fac66ca7f7bfcf7
 
 def videotest(filename):
     video_capture = cv2.VideoCapture(filename)
